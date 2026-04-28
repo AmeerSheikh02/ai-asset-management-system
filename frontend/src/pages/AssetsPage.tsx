@@ -1,18 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { assetsAPI } from '../services'
-import { useAssetSearch } from '../hooks'
 import AssetTable from '../components/AssetTable'
-import type { AssetDto, CreateAssetDto } from '../types'
-import { ASSET_STATUSES } from '../utils/constants'
+import type { AssetDto } from '../types'
 
 export default function AssetsPage() {
   const navigate = useNavigate()
   const [assets, setAssets] = useState<AssetDto[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  const { searchQuery, setSearchQuery, statusFilter, setStatusFilter, filtered } = useAssetSearch(assets)
 
   // Load assets on mount
   useEffect(() => {
@@ -53,86 +49,37 @@ export default function AssetsPage() {
   }
 
   return (
-    <section>
-      <div className="hero">
-        <div className="badge">Assets</div>
-        <h2>Asset Inventory</h2>
-        <p className="page-copy">Manage your complete asset inventory with search and filtering.</p>
-        <button
-          onClick={() => navigate('/assets/new')}
-          style={{
-            marginTop: 12,
-            padding: '12px 18px',
-            borderRadius: 8,
-            border: 'none',
-            background: '#1f5eff',
-            color: '#fff',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
-        >
-          + Add Asset
-        </button>
+    <section className="space-y-6">
+      <div className="rounded-[28px] border border-sky-200/60 bg-gradient-to-br from-sky-50 via-white to-emerald-50 p-6 shadow-sm sm:p-8">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl space-y-3">
+            <div className="inline-flex items-center rounded-full border border-sky-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700">
+              Assets
+            </div>
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Asset Inventory</h2>
+            <p className="text-sm leading-6 text-slate-600 sm:text-base">Manage your complete asset inventory with search and filtering.</p>
+          </div>
+
+          <button
+            onClick={() => navigate('/assets/new')}
+            className="inline-flex items-center justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
+          >
+            + Add Asset
+          </button>
+        </div>
       </div>
 
       {error && (
-        <div
-          style={{
-            padding: 16,
-            background: '#ffddd5',
-            color: '#b42318',
-            borderRadius: 12,
-            marginTop: 18,
-          }}
-        >
+        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-sm">
           {error}
         </div>
       )}
 
-      <div style={{ marginTop: 24 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 12, marginBottom: 18 }}>
-          <input
-            type="text"
-            placeholder="Search by name, type, or description..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              padding: '12px 14px',
-              borderRadius: 10,
-              border: '1px solid rgba(31, 94, 255, 0.16)',
-              fontSize: 14,
-              fontFamily: 'inherit',
-            }}
-          />
-          <select
-            value={statusFilter || ''}
-            onChange={(e) => setStatusFilter(e.target.value || undefined)}
-            style={{
-              padding: '12px 14px',
-              borderRadius: 10,
-              border: '1px solid rgba(31, 94, 255, 0.16)',
-              fontSize: 14,
-              minWidth: 150,
-            }}
-          >
-            <option value="">All Statuses</option>
-            {ASSET_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        </div>
-
+      <div className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
         {loading ? (
-          <p className="page-copy">Loading assets...</p>
+          <p className="text-sm text-slate-500">Loading assets...</p>
         ) : (
-          <AssetTable
-            assets={filtered}
-            onDelete={handleDelete}
-            onEdit={(asset) => navigate(`/assets/edit/${asset.id}`)}
-            loading={loading}
-          />
+          <AssetTable assets={assets} onDelete={handleDelete} onEdit={(asset) => navigate(`/assets/edit/${asset.id}`)} loading={loading} />
         )}
       </div>
     </section>

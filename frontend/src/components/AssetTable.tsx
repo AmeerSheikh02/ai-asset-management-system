@@ -103,80 +103,100 @@ export default function AssetTable({ assets: assetsProp, onDelete: onDeleteProp,
     }
   }
 
-  if (loading) return <p className="page-copy" style={{ marginTop: 18 }}>Loading assets...</p>
-  if (error) return <div style={{ padding: 12, background: '#ffddd5', color: '#b42318', borderRadius: 8 }}>{error}</div>
-  if (assets.length === 0) return <p className="page-copy" style={{ marginTop: 18 }}>No assets found.</p>
+  if (loading) return <p className="text-sm text-slate-500">Loading assets...</p>
+  if (error) return <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
+  if (assets.length === 0) return <p className="text-sm text-slate-500">No assets found.</p>
 
   return (
-    <div>
-      <div style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'center' }}>
+    <div className="space-y-4">
+      <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px_220px]">
         <input
           placeholder="Search by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(31,94,255,0.16)', flex: 1 }}
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300 focus:bg-white focus:ring-4 focus:ring-sky-100"
         />
 
-        <select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(31,94,255,0.16)' }}>
+        <select
+          value={locationFilter}
+          onChange={(e) => setLocationFilter(e.target.value)}
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-sky-300 focus:bg-white focus:ring-4 focus:ring-sky-100"
+        >
           <option value="">All locations</option>
           {locations.map((loc) => (<option key={loc} value={loc}>{loc}</option>))}
         </select>
 
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(31,94,255,0.16)' }}>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-sky-300 focus:bg-white focus:ring-4 focus:ring-sky-100"
+        >
           <option value="">All statuses</option>
           {Array.from(new Set(assets.map((a) => a.status))).map((s) => (<option key={s} value={s}>{s}</option>))}
         </select>
       </div>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Price</th>
-            <th>Location</th>
-            <th>Added</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map((asset) => (
-            <tr key={asset.id}>
-              <td>
-                <strong>{asset.name}</strong>
-                {asset.description && (
-                  <p style={{ margin: '4px 0 0', fontSize: 12, color: '#8c92a4' }}>
-                    {asset.description.substring(0, 50)}{asset.description.length > 50 ? '...' : ''}
-                  </p>
-                )}
-              </td>
-              <td>{asset.assetType}</td>
-              <td>
-                <span className="badge" style={{ backgroundColor: `${STATUS_COLORS[asset.status]}20`, color: STATUS_COLORS[asset.status] || '#1f5eff' }}>
-                  {asset.status}
-                </span>
-              </td>
-              <td>{formatCurrency(asset.purchasePrice)}</td>
-              <td>{asset.location || '—'}</td>
-              <td>{formatDate(asset.createdAt)}</td>
-              <td>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  {onEdit && (
-                    <button
-                      onClick={() => onEdit(asset)}
-                      style={{ padding: '6px 12px', fontSize: 12, borderRadius: 6, border: '1px solid #1f5eff', color: '#1f5eff', background: 'transparent', cursor: 'pointer' }}
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-200">
+            <thead className="bg-slate-50">
+              <tr>
+                {['Name', 'Type', 'Status', 'Price', 'Location', 'Added', 'Actions'].map((header) => (
+                  <th key={header} className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 bg-white">
+              {filtered.map((asset) => (
+                <tr key={asset.id} className="align-top transition hover:bg-slate-50/70">
+                  <td className="px-5 py-4">
+                    <div className="space-y-1">
+                      <div className="font-semibold text-slate-950">{asset.name}</div>
+                      {asset.description && (
+                        <p className="max-w-md text-sm text-slate-500">
+                          {asset.description.substring(0, 50)}{asset.description.length > 50 ? '...' : ''}
+                        </p>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-5 py-4 text-sm text-slate-600">{asset.assetType}</td>
+                  <td className="px-5 py-4">
+                    <span
+                      className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                      style={{ backgroundColor: `${STATUS_COLORS[asset.status]}20`, color: STATUS_COLORS[asset.status] || '#1f5eff' }}
                     >
-                      Edit
-                    </button>
-                  )}
-                  <button onClick={() => handleDelete(asset)} style={{ padding: '6px 12px', fontSize: 12, borderRadius: 6, border: '1px solid #b42318', color: '#b42318', background: 'transparent', cursor: 'pointer' }}>Delete</button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                      {asset.status}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4 text-sm font-medium text-slate-700">{formatCurrency(asset.purchasePrice)}</td>
+                  <td className="px-5 py-4 text-sm text-slate-600">{asset.location || '—'}</td>
+                  <td className="px-5 py-4 text-sm text-slate-600">{formatDate(asset.createdAt)}</td>
+                  <td className="px-5 py-4">
+                    <div className="flex flex-wrap gap-2">
+                      {onEdit && (
+                        <button
+                          onClick={() => onEdit(asset)}
+                          className="inline-flex items-center justify-center rounded-full border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-semibold text-sky-700 transition hover:bg-sky-100"
+                        >
+                          Edit
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDelete(asset)}
+                        className="inline-flex items-center justify-center rounded-full border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-100"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }
