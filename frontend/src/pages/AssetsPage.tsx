@@ -44,15 +44,36 @@ export default function AssetsPage() {
     }
   }, [])
 
-  const handleCreate = async (data: CreateAssetDto) => {
+  const openCreateForm = () => {
+    setEditingAsset(null)
+    setShowForm(true)
+  }
+
+  const openEditForm = (asset: AssetDto) => {
+    setEditingAsset(asset)
+    setShowForm(true)
+  }
+
+  const closeForm = () => {
+    setShowForm(false)
+    setEditingAsset(null)
+  }
+
+  const handleSubmit = async (data: CreateAssetDto) => {
     setFormLoading(true)
     try {
-      const newAsset = await assetsAPI.create(data)
-      setAssets((prev) => [newAsset, ...prev])
-      setShowForm(false)
+      if (editingAsset) {
+        const updatedAsset = await assetsAPI.update(editingAsset.id, data)
+        setAssets((prev) => prev.map((asset) => (asset.id === updatedAsset.id ? updatedAsset : asset)))
+      } else {
+        const newAsset = await assetsAPI.create(data)
+        setAssets((prev) => [newAsset, ...prev])
+      }
+
+      closeForm()
       setError(null)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create asset')
+      setError(err instanceof Error ? err.message : editingAsset ? 'Failed to update asset' : 'Failed to create asset')
     } finally {
       setFormLoading(false)
     }
@@ -76,7 +97,7 @@ export default function AssetsPage() {
         <p className="page-copy">Manage your complete asset inventory with search and filtering.</p>
         {!showForm && (
           <button
-            onClick={() => setShowForm(true)}
+            onClick={openCreateForm}
             style={{
               marginTop: 12,
               padding: '12px 18px',
@@ -117,11 +138,12 @@ export default function AssetsPage() {
             borderRadius: 18,
           }}
         >
-          <h3>Create New Asset</h3>
+          <h3>{editingAsset ? 'Edit Asset' : 'Create New Asset'}</h3>
           <AssetForm
-            onSubmit={handleCreate}
+            initialData={editingAsset ?? undefined}
+            onSubmit={handleSubmit}
             isLoading={formLoading}
-            onCancel={() => setShowForm(false)}
+            onCancel={closeForm}
           />
         </div>
       )}
@@ -167,7 +189,7 @@ export default function AssetsPage() {
           <AssetTable
             assets={filtered}
             onDelete={handleDelete}
-            onEdit={setEditingAsset}
+            onEdit={openEditForm}
             loading={loading}
           />
         )}
