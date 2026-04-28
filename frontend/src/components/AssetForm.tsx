@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useAssetForm } from '../hooks'
 import { ASSET_TYPES, ASSET_STATUSES } from '../utils/constants'
 import type { AssetDto, CreateAssetDto } from '../types'
@@ -10,7 +11,20 @@ interface AssetFormProps {
 }
 
 export default function AssetForm({ onSubmit, initialData, isLoading = false, onCancel }: AssetFormProps) {
-  const { formData, errors, handleChange, validate, reset } = useAssetForm()
+  const { formData, setFormData, errors, handleChange, validate, reset } = useAssetForm()
+
+  useEffect(() => {
+    if (!initialData) return
+
+    setFormData({
+      name: initialData.name,
+      description: initialData.description,
+      assetType: initialData.assetType,
+      purchasePrice: initialData.purchasePrice.toString(),
+      purchaseDate: initialData.purchaseDate,
+      location: initialData.location ?? '',
+    })
+  }, [initialData, setFormData])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
