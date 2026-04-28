@@ -162,6 +162,14 @@ export default function AssetTable({ assets: assetsProp, onDelete: onDeleteProp,
               <td>{formatDate(asset.createdAt)}</td>
               <td>
                 <div style={{ display: 'flex', gap: 8 }}>
+                  {onEdit && (
+                    <button
+                      onClick={() => onEdit(asset)}
+                      style={{ padding: '6px 12px', fontSize: 12, borderRadius: 6, border: '1px solid #1f5eff', color: '#1f5eff', background: 'transparent', cursor: 'pointer' }}
+                    >
+                      Edit
+                    </button>
+                  )}
                   <button onClick={() => handleDelete(asset)} style={{ padding: '6px 12px', fontSize: 12, borderRadius: 6, border: '1px solid #b42318', color: '#b42318', background: 'transparent', cursor: 'pointer' }}>Delete</button>
                 </div>
               </td>
