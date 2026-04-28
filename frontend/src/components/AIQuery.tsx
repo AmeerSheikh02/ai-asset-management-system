@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { aiAPI } from '../services'
 import type { AssetDto } from '../types'
+import Spinner from './Spinner'
 
 interface AIQueryProps {
   onResults?: (query: string, assets: AssetDto[]) => void
@@ -74,8 +75,12 @@ export default function AIQuery({ onResults }: AIQueryProps) {
               fontWeight: 600,
               cursor: loading || !query.trim() ? 'not-allowed' : 'pointer',
               opacity: loading || !query.trim() ? 0.6 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
+            {loading && <Spinner />}
             {loading ? 'Searching...' : 'Search'}
           </button>
         </div>
@@ -99,14 +104,17 @@ export default function AIQuery({ onResults }: AIQueryProps) {
       {result && (
         <div
           style={{
-            padding: 12,
-            borderRadius: 10,
-            background: '#e8f4ff',
+            padding: 16,
+            borderRadius: 12,
+            background: 'linear-gradient(135deg, #e8f4ff 0%, #f0f9ff 100%)',
+            border: '1px solid rgba(31, 94, 255, 0.2)',
             color: '#1746c5',
             fontSize: 14,
+            fontWeight: 500,
+            lineHeight: 1.6,
           }}
         >
-          {result}
+          ✓ {result}
         </div>
       )}
 
