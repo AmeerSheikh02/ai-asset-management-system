@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { assetsAPI } from '../services'
 import { useAssetSearch } from '../hooks'
 import AssetTable from '../components/AssetTable'
-import AssetForm from '../components/AssetForm'
+import AssetFormV2 from '../components/AssetFormV2'
 import type { AssetDto, CreateAssetDto } from '../types'
 import { ASSET_STATUSES } from '../utils/constants'
 
@@ -59,24 +59,12 @@ export default function AssetsPage() {
     setEditingAsset(null)
   }
 
-  const handleSubmit = async (data: CreateAssetDto) => {
-    setFormLoading(true)
-    try {
-      if (editingAsset) {
-        const updatedAsset = await assetsAPI.update(editingAsset.id, data)
-        setAssets((prev) => prev.map((asset) => (asset.id === updatedAsset.id ? updatedAsset : asset)))
-      } else {
-        const newAsset = await assetsAPI.create(data)
-        setAssets((prev) => [newAsset, ...prev])
-      }
-
-      closeForm()
-      setError(null)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : editingAsset ? 'Failed to update asset' : 'Failed to create asset')
-    } finally {
-      setFormLoading(false)
-    }
+  const handleFormSuccess = (asset: AssetDto) => {
+    // If editing, replace; otherwise prepend
+    setAssets((prev) => (editingAsset ? prev.map((a) => (a.id === asset.id ? asset : a)) : [asset, ...prev]))
+    closeForm()
+    setFormLoading(false)
+    setError(null)
   }
 
   const handleDelete = async (id: number) => {
@@ -139,10 +127,9 @@ export default function AssetsPage() {
           }}
         >
           <h3>{editingAsset ? 'Edit Asset' : 'Create New Asset'}</h3>
-          <AssetForm
+          <AssetFormV2
             initialData={editingAsset ?? undefined}
-            onSubmit={handleSubmit}
-            isLoading={formLoading}
+            onSuccess={handleFormSuccess}
             onCancel={closeForm}
           />
         </div>
