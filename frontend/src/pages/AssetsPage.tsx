@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { assetsAPI } from '../services'
 import { useAssetSearch } from '../hooks'
 import AssetTable from '../components/AssetTable'
-import AssetFormV2 from '../components/AssetFormV2'
 import type { AssetDto, CreateAssetDto } from '../types'
 import { ASSET_STATUSES } from '../utils/constants'
 
 export default function AssetsPage() {
+  const navigate = useNavigate()
   const [assets, setAssets] = useState<AssetDto[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [showForm, setShowForm] = useState(false)
-  const [editingAsset, setEditingAsset] = useState<AssetDto | null>(null)
-  const [formLoading, setFormLoading] = useState(false)
 
   const { searchQuery, setSearchQuery, statusFilter, setStatusFilter, filtered } = useAssetSearch(assets)
 
@@ -44,29 +42,6 @@ export default function AssetsPage() {
     }
   }, [])
 
-  const openCreateForm = () => {
-    setEditingAsset(null)
-    setShowForm(true)
-  }
-
-  const openEditForm = (asset: AssetDto) => {
-    setEditingAsset(asset)
-    setShowForm(true)
-  }
-
-  const closeForm = () => {
-    setShowForm(false)
-    setEditingAsset(null)
-  }
-
-  const handleFormSuccess = (asset: AssetDto) => {
-    // If editing, replace; otherwise prepend
-    setAssets((prev) => (editingAsset ? prev.map((a) => (a.id === asset.id ? asset : a)) : [asset, ...prev]))
-    closeForm()
-    setFormLoading(false)
-    setError(null)
-  }
-
   const handleDelete = async (id: number) => {
     try {
       await assetsAPI.delete(id)
@@ -83,23 +58,21 @@ export default function AssetsPage() {
         <div className="badge">Assets</div>
         <h2>Asset Inventory</h2>
         <p className="page-copy">Manage your complete asset inventory with search and filtering.</p>
-        {!showForm && (
-          <button
-            onClick={openCreateForm}
-            style={{
-              marginTop: 12,
-              padding: '12px 18px',
-              borderRadius: 8,
-              border: 'none',
-              background: '#1f5eff',
-              color: '#fff',
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            + Add Asset
-          </button>
-        )}
+        <button
+          onClick={() => navigate('/assets/new')}
+          style={{
+            marginTop: 12,
+            padding: '12px 18px',
+            borderRadius: 8,
+            border: 'none',
+            background: '#1f5eff',
+            color: '#fff',
+            fontWeight: 600,
+            cursor: 'pointer',
+          }}
+        >
+          + Add Asset
+        </button>
       </div>
 
       {error && (
@@ -113,25 +86,6 @@ export default function AssetsPage() {
           }}
         >
           {error}
-        </div>
-      )}
-
-      {showForm && (
-        <div
-          style={{
-            marginTop: 24,
-            padding: 24,
-            background: '#f9fbff',
-            border: '1px solid rgba(31, 94, 255, 0.1)',
-            borderRadius: 18,
-          }}
-        >
-          <h3>{editingAsset ? 'Edit Asset' : 'Create New Asset'}</h3>
-          <AssetFormV2
-            initialData={editingAsset ?? undefined}
-            onSuccess={handleFormSuccess}
-            onCancel={closeForm}
-          />
         </div>
       )}
 
@@ -176,7 +130,7 @@ export default function AssetsPage() {
           <AssetTable
             assets={filtered}
             onDelete={handleDelete}
-            onEdit={openEditForm}
+            onEdit={(asset) => navigate(`/assets/edit/${asset.id}`)}
             loading={loading}
           />
         )}
