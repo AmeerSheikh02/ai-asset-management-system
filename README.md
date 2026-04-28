@@ -1,6 +1,176 @@
-# Asset Management API
+# Asset Management System
 
-A clean architecture ASP.NET Core 8 Web API for asset management with dependency injection and Swagger documentation.
+A full-stack application with an ASP.NET Core 8 Web API backend and a modern React + Vite frontend.
+
+## 🏗️ Project Structure
+
+This is a monorepo with both backend and frontend:
+
+```
+Asset Management/
+├── /                      # Backend (ASP.NET Core)
+│   ├── Controllers/       # API endpoints
+│   ├── Models/           # Domain entities
+│   ├── Services/         # Business logic
+│   ├── Data/             # Data access layer
+│   ├── DTOs/             # Data models
+│   ├── Program.cs        # Backend entry point
+│   └── appsettings.json  # Configuration
+│
+├── /frontend             # React + Vite frontend
+│   ├── src/components/   # Reusable components
+│   ├── src/pages/        # Route pages
+│   ├── src/services/     # API client
+│   ├── package.json      # Dependencies
+│   └── vite.config.ts    # Build config
+│
+└── README.md             # This file
+```
+
+## 🛠️ Tech Stack
+
+### Backend
+- **ASP.NET Core 8** with C# clean architecture
+- **Entity Framework Core** + SQL Server
+- **Swagger/OpenAPI** documentation
+- **Dependency Injection** for loose coupling
+
+### Frontend
+- **React 18** with TypeScript
+- **Vite 6** for ultra-fast builds
+- **React Router v6** for client routing
+- **Axios** for API communication
+
+## 🚀 Quick Start
+
+### Backend Setup
+
+```bash
+# Restore and build
+dotnet restore
+dotnet build
+
+# Setup database
+dotnet ef database update
+
+# Run the API
+dotnet run
+```
+
+API available at `https://localhost:5001` with Swagger UI at root.
+
+### Frontend Setup
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Create environment config
+cp .env.example .env
+
+# Start dev server
+npm run dev
+```
+
+Frontend available at `http://localhost:5173`.
+
+## 📚 API Endpoints
+
+All endpoints use `/api/assets/` prefix:
+
+- `GET /` - Get all assets
+- `GET /{id}` - Get asset by ID
+- `POST /` - Create asset
+- `PUT /{id}` - Update asset
+- `DELETE /{id}` - Delete asset
+
+## 🏗️ Architecture
+
+### Backend: Clean Architecture
+- Controllers handle HTTP requests
+- Services contain business logic
+- Repositories abstract data access
+- DTOs separate API contracts from domain models
+- Dependency Injection wires everything
+
+### Frontend: Component-Based
+- Functional components with React Hooks
+- TypeScript for type safety
+- React Router for navigation
+- Axios service layer for API calls
+- Responsive CSS design system
+
+## 📦 Key Dependencies
+
+**Backend:**
+- Entity Framework Core 8.0
+- Swashbuckle.AspNetCore 6.5.0
+
+**Frontend:**
+- react 18.3.1
+- react-router-dom 6.28.2
+- axios 1.7.9
+- vite 6.0.7
+- typescript 5.7.2
+
+## 🧪 Build & Run
+
+```bash
+# Backend build
+dotnet build
+
+# Frontend build
+cd frontend && npm run build
+
+# Backend run
+dotnet run
+
+# Frontend dev
+cd frontend && npm run dev
+```
+
+## 📝 Database Migrations
+
+```bash
+# Create migration
+dotnet ef migrations add MigrationName
+
+# Apply migrations
+dotnet ef database update
+
+# Revert last migration
+dotnet ef migrations remove
+```
+
+## 🔐 CORS Configuration
+
+Backend allows frontend on `http://localhost:5173`. Modify in `Program.cs` if needed.
+
+## 📄 Documentation
+
+- **Backend Details**: See `.github/copilot-instructions.md`
+- **Frontend Setup**: See `frontend/README.md`
+- **API Documentation**: `https://localhost:5001/swagger`
+
+## 🎯 Next Steps
+
+- [ ] Add JWT authentication
+- [ ] Implement error handling middleware
+- [ ] Create asset CRUD UI pages
+- [ ] Add form validation
+- [ ] Write unit tests
+- [ ] Setup CI/CD pipeline
+- [ ] Add logging and monitoring
+- [ ] Deploy to cloud
+
+## 📞 Development
+
+For full documentation:
+1. Check `frontend/README.md` for frontend specifics
+2. Review `.github/copilot-instructions.md` for backend guidelines
+3. See `package.json` and `AssetManagementAPI.csproj` for dependencies
 
 ## Project Structure
 
