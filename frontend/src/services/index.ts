@@ -1,5 +1,6 @@
+import { api } from './api'
 import { getAllAssets } from './assetsService'
-import type { AssetDto } from '../types'
+import type { AssetDto, AssetSummary } from '../types'
 
 export {
   assetsAPI,
@@ -9,6 +10,11 @@ export {
   getAssetById,
   updateAsset,
 } from './assetsService'
+
+const getAssetSummary = async (): Promise<AssetSummary> => {
+  const response = await api.get<AssetSummary>('/ai/summary')
+  return response.data
+}
 
 // AI Query endpoints (placeholder for future AI integration)
 export const aiAPI = {
@@ -20,6 +26,8 @@ export const aiAPI = {
       assets,
     }
   },
+
+  getSummary: getAssetSummary,
 
   generateReport: async (filters: Record<string, unknown>): Promise<string> => {
     // Placeholder for AI-powered report generation

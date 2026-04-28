@@ -31,6 +31,12 @@ export type AssetStats = {
   totalValue: number
 }
 
+export type AssetSummary = {
+  totalAssets: number
+  damagedAssets: number
+  inactiveAssets: number
+}
+
 export type APIResponse<T> = {
   success: boolean
   data?: T
