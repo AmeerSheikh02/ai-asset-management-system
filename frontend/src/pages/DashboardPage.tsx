@@ -1,26 +1,24 @@
 import { useEffect, useState } from 'react'
-import { assetsAPI } from '../services'
-import { calculateAssetStats, formatCurrency } from '../utils/helpers'
-import AssetTable from '../components/AssetTable'
-import type { AssetDto } from '../types'
+import { aiAPI } from '../services'
+import type { AssetSummary } from '../types'
 
 export default function DashboardPage() {
-  const [assets, setAssets] = useState<AssetDto[]>([])
+  const [summary, setSummary] = useState<AssetSummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let mounted = true
 
-    const loadAssets = async () => {
+    const loadSummary = async () => {
       try {
-        const data = await assetsAPI.getAll()
+        const data = await aiAPI.getSummary()
         if (mounted) {
-          setAssets(data)
+          setSummary(data)
         }
       } catch (err) {
         if (mounted) {
-          setError(err instanceof Error ? err.message : 'Failed to load assets')
+          setError(err instanceof Error ? err.message : 'Failed to load dashboard summary')
         }
       } finally {
         if (mounted) {
@@ -29,22 +27,19 @@ export default function DashboardPage() {
       }
     }
 
-    void loadAssets()
+    void loadSummary()
 
     return () => {
       mounted = false
     }
   }, [])
 
-  const stats = calculateAssetStats(assets)
-  const recentAssets = assets.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5)
-
   return (
     <section>
       <div className="hero">
         <div className="badge">Dashboard</div>
-        <h2>Asset Management Overview</h2>
-        <p className="page-copy">Track and manage your organizational assets at a glance.</p>
+        <h2>Asset Summary</h2>
+        <p className="page-copy">A quick snapshot of the current asset state.</p>
       </div>
 
       {error && (
@@ -58,42 +53,22 @@ export default function DashboardPage() {
           <p style={{ margin: 0, color: '#607089', fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5 }}>
             Total Assets
           </p>
-          <div className="card__stat">{stats.totalAssets}</div>
-          <p style={{ margin: '8px 0 0', color: '#8c92a4', fontSize: 12 }}>
-            {stats.activeAssets} active
-          </p>
+          <div className="card__stat">{loading ? 'Loading...' : summary?.totalAssets ?? '—'}</div>
         </div>
 
         <div className="card">
           <p style={{ margin: 0, color: '#607089', fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Total Value
+            Damaged Assets
           </p>
-          <div className="card__stat" style={{ fontSize: '1.4rem' }}>{formatCurrency(stats.totalValue)}</div>
-          <p style={{ margin: '8px 0 0', color: '#8c92a4', fontSize: 12 }}>
-            Combined asset value
-          </p>
+          <div className="card__stat">{loading ? 'Loading...' : summary?.damagedAssets ?? '—'}</div>
         </div>
 
         <div className="card">
           <p style={{ margin: 0, color: '#607089', fontSize: 13, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-            Under Maintenance
+            Inactive Assets
           </p>
-          <div className="card__stat">{stats.maintenanceAssets}</div>
-          <p style={{ margin: '8px 0 0', color: '#8c92a4', fontSize: 12 }}>
-            {stats.activeAssets} available
-          </p>
+          <div className="card__stat">{loading ? 'Loading...' : summary?.inactiveAssets ?? '—'}</div>
         </div>
-      </div>
-
-      <div style={{ marginTop: 32 }}>
-        <h3 style={{ margin: '0 0 18px' }}>Recently Added Assets</h3>
-        {loading ? (
-          <p className="page-copy">Loading...</p>
-        ) : recentAssets.length > 0 ? (
-          <AssetTable assets={recentAssets} />
-        ) : (
-          <p className="page-copy">No assets yet. Get started by adding your first asset.</p>
-        )}
       </div>
     </section>
   )
