@@ -34,51 +34,26 @@ export default function AIQuery({ onResults }: AIQueryProps) {
   }
 
   return (
-    <div
-      style={{
-        background: 'linear-gradient(135deg, rgba(31, 94, 255, 0.08), rgba(255, 255, 255, 0.92))',
-        border: '1px solid rgba(31, 94, 255, 0.12)',
-        borderRadius: 18,
-        padding: 24,
-      }}
-    >
-      <h3 style={{ margin: '0 0 12px', color: '#1f5eff' }}>🤖 AI Asset Query</h3>
-      <p style={{ margin: '0 0 20px', color: '#607089', fontSize: 14 }}>
-        Ask questions about your assets in natural language.
-      </p>
+    <div className="rounded-[28px] border border-sky-200/60 bg-gradient-to-br from-sky-50 via-white to-emerald-50 p-5 shadow-sm sm:p-6">
+      <div className="max-w-2xl">
+        <h3 className="text-xl font-semibold tracking-tight text-slate-950">🤖 AI Asset Query</h3>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Ask questions about your assets in natural language.</p>
+      </div>
 
-      <form onSubmit={handleQuery} style={{ display: 'grid', gap: 12, marginBottom: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 12 }}>
+      <form onSubmit={handleQuery} className="mt-6 grid gap-3">
+        <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="e.g., Show me all expensive equipment in Office A..."
-            style={{
-              padding: '12px 14px',
-              borderRadius: 10,
-              border: '1px solid rgba(31, 94, 255, 0.16)',
-              fontSize: 14,
-              fontFamily: 'inherit',
-            }}
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300 focus:ring-4 focus:ring-sky-100 disabled:bg-slate-100"
             disabled={loading}
           />
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            style={{
-              padding: '12px 24px',
-              borderRadius: 8,
-              border: 'none',
-              background: '#1f5eff',
-              color: '#fff',
-              fontWeight: 600,
-              cursor: loading || !query.trim() ? 'not-allowed' : 'pointer',
-              opacity: loading || !query.trim() ? 0.6 : 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading && <Spinner />}
             {loading ? 'Searching...' : 'Search'}
@@ -87,42 +62,22 @@ export default function AIQuery({ onResults }: AIQueryProps) {
       </form>
 
       {error && (
-        <div
-          style={{
-            padding: 12,
-            borderRadius: 10,
-            background: '#ffddd5',
-            color: '#b42318',
-            fontSize: 14,
-            marginBottom: 12,
-          }}
-        >
+        <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
       {result && (
-        <div
-          style={{
-            padding: 16,
-            borderRadius: 12,
-            background: 'linear-gradient(135deg, #e8f4ff 0%, #f0f9ff 100%)',
-            border: '1px solid rgba(31, 94, 255, 0.2)',
-            color: '#1746c5',
-            fontSize: 14,
-            fontWeight: 500,
-            lineHeight: 1.6,
-          }}
-        >
+        <div className="mt-4 rounded-2xl border border-sky-200 bg-gradient-to-r from-sky-50 to-cyan-50 px-4 py-4 text-sm font-medium leading-6 text-sky-800">
           ✓ {result}
         </div>
       )}
 
-      <details style={{ marginTop: 16 }}>
-        <summary style={{ cursor: 'pointer', color: '#1f5eff', fontWeight: 600 }}>
+      <details className="mt-5 rounded-2xl border border-slate-200 bg-white/80 px-4 py-3">
+        <summary className="cursor-pointer select-none text-sm font-semibold text-sky-700">
           Example queries
         </summary>
-        <ul style={{ margin: '12px 0 0', paddingLeft: 20, color: '#607089', fontSize: 13 }}>
+        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-600">
           <li>Show all computers worth over $1000</li>
           <li>List assets in maintenance status</li>
           <li>Find equipment in the warehouse</li>

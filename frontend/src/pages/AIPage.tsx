@@ -13,36 +13,32 @@ export default function AIPage() {
   }
 
   return (
-    <section>
-      <div className="hero">
-        <div className="badge">AI-Powered</div>
-        <h2>Intelligent Asset Search</h2>
-        <p className="page-copy">
-          Use natural language to query your asset database. Describe what you're looking for and let AI find it.
-        </p>
+    <section className="space-y-6">
+      <div className="rounded-[28px] border border-sky-200/60 bg-gradient-to-br from-sky-50 via-white to-emerald-50 p-6 shadow-sm sm:p-8">
+        <div className="inline-flex items-center rounded-full border border-sky-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700">
+          AI-Powered
+        </div>
+        <div className="mt-5 max-w-2xl space-y-3">
+          <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Intelligent Asset Search</h2>
+          <p className="text-sm leading-6 text-slate-600 sm:text-base">
+            Use natural language to query your asset database. Describe what you're looking for and let AI find it.
+          </p>
+        </div>
       </div>
 
-      <div style={{ marginTop: 24 }}>
+      <div>
         <AIQuery onResults={handleQueryResults} />
       </div>
 
       {queryResults.length > 0 && (
-        <div style={{ marginTop: 32 }}>
-          <div
-            style={{
-              padding: 20,
-              background: 'linear-gradient(135deg, rgba(31, 94, 255, 0.06), rgba(255, 255, 255, 0.96))',
-              border: '1px solid rgba(31, 94, 255, 0.1)',
-              borderRadius: 16,
-              marginBottom: 24,
-            }}
-          >
-            <h3 style={{ margin: '0 0 12px', color: '#1f5eff' }}>📊 Query Results</h3>
-            <p style={{ margin: '0 0 8px', color: '#607089', fontSize: 14 }}>
-              <strong>Query:</strong> <em>"{lastQuery}"</em>
+        <div className="space-y-4">
+          <div className="rounded-[28px] border border-sky-200/60 bg-gradient-to-r from-sky-50 to-white p-5 shadow-sm sm:p-6">
+            <h3 className="text-lg font-semibold tracking-tight text-sky-700">📊 Query Results</h3>
+            <p className="mt-3 text-sm text-slate-600">
+              <span className="font-semibold text-slate-900">Query:</span> <em>"{lastQuery}"</em>
             </p>
-            <p style={{ margin: 0, color: '#607089', fontSize: 14 }}>
-              <strong style={{ color: '#1f5eff', fontSize: 16 }}>{queryResults.length}</strong> asset{queryResults.length !== 1 ? 's' : ''} found
+            <p className="mt-2 text-sm text-slate-600">
+              <span className="text-lg font-semibold text-sky-700">{queryResults.length}</span> asset{queryResults.length !== 1 ? 's' : ''} found
             </p>
           </div>
           <AssetTable assets={queryResults} />
@@ -50,39 +46,18 @@ export default function AIPage() {
       )}
 
       {queryResults.length === 0 && lastQuery && (
-        <div
-          style={{
-            marginTop: 24,
-            padding: 32,
-            background: 'linear-gradient(135deg, rgba(100, 116, 139, 0.05), rgba(255, 255, 255, 0.96))',
-            border: '2px dashed rgba(100, 116, 139, 0.2)',
-            borderRadius: 16,
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
-          <h4 style={{ margin: '0 0 8px', color: '#475569', fontSize: 16 }}>No results found</h4>
-          <p style={{ color: '#607089', margin: '0 0 12px', fontSize: 13 }}>
-            Your query "{lastQuery}" didn't match any assets.
-          </p>
-          <p style={{ color: '#8c92a4', margin: 0, fontSize: 12 }}>
-            Try using different keywords, specific locations, or asset types.
-          </p>
+        <div className="rounded-[28px] border-2 border-dashed border-slate-200 bg-white/85 p-8 text-center shadow-sm">
+          <div className="text-4xl">🔍</div>
+          <h4 className="mt-3 text-lg font-semibold tracking-tight text-slate-900">No results found</h4>
+          <p className="mt-2 text-sm text-slate-600">Your query "{lastQuery}" didn't match any assets.</p>
+          <p className="mt-2 text-sm text-slate-500">Try different keywords, specific locations, or asset types.</p>
         </div>
       )}
 
       {!lastQuery && (
-        <div
-          style={{
-            marginTop: 32,
-            padding: 24,
-            background: 'linear-gradient(135deg, rgba(0, 186, 124, 0.08), rgba(255, 255, 255, 0.92))',
-            border: '1px solid rgba(0, 186, 124, 0.12)',
-            borderRadius: 18,
-          }}
-        >
-          <h3 style={{ margin: '0 0 12px', color: '#00ba7c' }}>💡 Query Tips</h3>
-          <ul style={{ margin: 0, paddingLeft: 20, color: '#607089', fontSize: 14, lineHeight: 1.8 }}>
+        <div className="rounded-[28px] border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-6 shadow-sm">
+          <h3 className="text-lg font-semibold tracking-tight text-emerald-700">💡 Query Tips</h3>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-slate-600">
             <li>Use specific terms like <strong>"computer"</strong>, <strong>"furniture"</strong>, or <strong>"equipment"</strong></li>
             <li>Mention <strong>locations</strong> to filter by area: "assets in Office A"</li>
             <li>Include <strong>price ranges</strong>: "equipment over $500"</li>
