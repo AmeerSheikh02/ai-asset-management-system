@@ -1,6 +1,6 @@
 import { api } from './api'
 import { getAllAssets } from './assetsService'
-import type { AssetDto, AssetSummary } from '../types'
+import type { AIQueryResponse, AssetSummary } from '../types'
 
 export {
   assetsAPI,
@@ -18,8 +18,8 @@ const getAssetSummary = async (): Promise<AssetSummary> => {
 
 // AI Query endpoints
 export const aiAPI = {
-  queryAssets: async (query: string): Promise<{ result: string; assets: AssetDto[] }> => {
-    const response = await api.post<{ result: string; assets: AssetDto[] }>('/ai/query', { query })
+  queryAssets: async (query: string): Promise<AIQueryResponse> => {
+    const response = await api.post<AIQueryResponse>('/ai/query', { query })
     return response.data
   },
 

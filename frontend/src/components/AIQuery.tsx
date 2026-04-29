@@ -11,6 +11,8 @@ export default function AIQuery({ onResults }: AIQueryProps) {
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<string | null>(null)
+  const [explanation, setExplanation] = useState<string | null>(null)
+  const [processedBy, setProcessedBy] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const handleQuery = async (e: React.FormEvent) => {
@@ -21,11 +23,15 @@ export default function AIQuery({ onResults }: AIQueryProps) {
     setLoading(true)
     setError(null)
     setResult(null)
+    setExplanation(null)
+    setProcessedBy(null)
 
     try {
-      const { result: aiResult, assets } = await aiAPI.queryAssets(query)
+      const { result: aiResult, filteredData, explanation: processingExplanation, strategy } = await aiAPI.queryAssets(query)
       setResult(aiResult)
-      onResults?.(query, assets)
+      setExplanation(processingExplanation)
+      setProcessedBy(strategy === 'rule-based' ? 'Processed by rule-based system' : 'Processed by AI')
+      onResults?.(query, filteredData)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to process query')
     } finally {
@@ -69,7 +75,17 @@ export default function AIQuery({ onResults }: AIQueryProps) {
 
       {result && (
         <div className="mt-4 rounded-2xl border border-sky-200 bg-gradient-to-r from-sky-50 to-cyan-50 px-4 py-4 text-sm font-medium leading-6 text-sky-800">
+          {processedBy && (
+            <div className="mb-2 inline-flex items-center rounded-full border border-sky-300 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-sky-700">
+              {processedBy}
+            </div>
+          )}
           ✓ {result}
+          {explanation && (
+            <p className="mt-2 text-sm font-normal leading-6 text-sky-900">
+              {explanation}
+            </p>
+          )}
         </div>
       )}
 
