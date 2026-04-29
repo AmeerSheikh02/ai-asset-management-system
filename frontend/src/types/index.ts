@@ -37,6 +37,13 @@ export type AssetSummary = {
   inactiveAssets: number
 }
 
+export type AIQueryResponse = {
+  filteredData: AssetDto[]
+  explanation: string
+  strategy: string
+  result: string
+}
+
 export type APIResponse<T> = {
   success: boolean
   data?: T
